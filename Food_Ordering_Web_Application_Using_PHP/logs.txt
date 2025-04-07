@@ -1,0 +1,2 @@
+$sql = "SELECT menu.dish_name,menu.dish_price,menu.dish_image,wishlist.menu_id,wishlist.quantity,wishlist.user_id FROM menu INNER JOIN wishlist ON menu.menu_id = wishlist.menu_id;";
+

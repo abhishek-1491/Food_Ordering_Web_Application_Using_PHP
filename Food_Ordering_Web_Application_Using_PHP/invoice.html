@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catering Invoice</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .invoice-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 800px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f4dcc5;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .header .invoice-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .details, .items-table, .totals, .payment-terms {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4dcc5;
+            color: black;
+        }
+        .totals td {
+            text-align: right;
+            font-weight: bold;
+        }
+        .download-btn {
+            background-color: #ff5722;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container" id="invoice">
+        <div class="header">
+            <div class="invoice-title">CATERING INVOICE</div>
+            <div class="contact-info">
+                <p>Your Street, City, State</p>
+                <p>your@email.com</p>
+                <p>+1 (321) 456-7899</p>
+            </div>
+        </div>
+        <div class="details">
+            <p><strong>Bill To:</strong> John Doe</p>
+            <p><strong>Invoice #:</strong> 001</p>
+            <p><strong>Date:</strong> 2025-03-14</p>
+        </div>
+        <table class="items-table" id="invoiceTable">
+            <tr>
+                <th>Quantity</th>
+                <th>Description</th>
+                <th>Unit Price</th>
+                <th>Amount</th>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Burger</td>
+                <td>$10</td>
+                <td>$20</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Pizza</td>
+                <td>$12</td>
+                <td>$12</td>
+            </tr>
+            
+        </table>
+        <table class="totals">
+            <tr>
+                <td>Subtotal:</td>
+                <td id="subtotal">$32</td>
+            </tr>
+            <tr>
+                <td>Sales Tax:</td>
+                <td id="salesTax">$2</td>
+            </tr>
+            <tr>
+                <td><strong>Total:</strong></td>
+                <td id="total"><strong>$34</strong></td>
+            </tr>
+        </table>
+        <p class="payment-terms">Payment is due within 7 days.</p>
+        <button class="download-btn" onclick="downloadInvoice()">Download Invoice</button>
+    </div>
+    <script>
+        function downloadInvoice() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.text("Catering Invoice", 70, 20);
+            
+            doc.setFontSize(12);
+            doc.text("Bill To: John Doe", 20, 40);
+            doc.text("Invoice #: 001", 20, 50);
+            doc.text("Date: 2025-03-14", 20, 60);
+            
+            const table = document.getElementById("invoiceTable");
+            const rows = [];
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = [];
+                for (let j = 0; j < table.rows[i].cells.length; j++) {
+                    row.push(table.rows[i].cells[j].innerText);
+                }
+                rows.push(row);
+            }
+            
+            doc.autoTable({
+                startY: 70,
+                head: [["Quantity", "Description", "Unit Price", "Amount"]],
+                body: rows
+            });
+            
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.text("Subtotal: " + document.getElementById("subtotal").innerText, 140, finalY);
+            doc.text("Sales Tax: " + document.getElementById("salesTax").innerText, 140, finalY + 10);
+            doc.text("Total: " + document.getElementById("total").innerText, 140, finalY + 20);
+            
+            doc.save("invoice.pdf");
+        }
+    </script>
+</body>
+</html>

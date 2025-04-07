@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; }
+        th { background-color: #e76f51; color: white; }
+    </style>
+</head>
+<body>
+
+    <h2>Checkout Details</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Dish Name</th>
+                <th>Quantity</th>
+                <th>price</th>
+                <th>menu_id</th>
+                
+            </tr>
+        </thead>
+        <tbody id="checkoutTable"></tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const checkoutData = JSON.parse(localStorage.getItem("checkoutData")) || [];
+            const checkoutTable = document.getElementById("checkoutTable");
+
+            checkoutData.forEach(dish => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${dish.dish_name}</td>
+                    <td>$${dish.quantity}</td>
+                    <td>${dish.price}</td>
+                    <td>${dish.menu_id}</td>
+                  
+                `;
+                checkoutTable.appendChild(row);
+                
+            });
+        });
+    </script>
+
+</body>
+</html>
